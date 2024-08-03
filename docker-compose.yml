@@ -1,0 +1,38 @@
+services:
+  client-backend2:
+    image: client:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - moneytransferdb
+    environment:
+      - SERVER_PORT= 8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://moneytransferdb/money_transfer_db
+      - SPRING_DATASOURCE_USERNAME=zhenya
+      - SPRING_DATASOURCE_PASSWORD=qwerty123
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING.KAFKA.CONSUMER.GROUP-ID=myGroup
+    networks:
+      - bank_my_network
+
+  moneytransferdb:
+    image: postgres:14-alpine3.14
+    container_name: money_transfer_db
+    ports:
+      - 25432:15432
+    environment:
+      POSTGRES_USER: zhenya
+      POSTGRES_PASSWORD: qwerty123
+      POSTGRES_DB: money_transfer_db
+    volumes:
+      - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+    networks:
+      - bank_my_network
+
+
+networks:
+  bank_my_network:
+    external: true
