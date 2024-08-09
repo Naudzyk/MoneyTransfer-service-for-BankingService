@@ -16,7 +16,7 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - SPRING.KAFKA.CONSUMER.GROUP-ID=myGroup
     networks:
-      - bank_my_network
+      - bankingservice-master_my_network
 
   moneytransferdb:
     image: postgres:14-alpine3.14
@@ -30,9 +30,9 @@ services:
     volumes:
       - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
     networks:
-      - bank_my_network
+      - bankingservice-master_my_network
 
 
 networks:
-  bank_my_network:
+  bankingservice-master_my_network:
     external: true
